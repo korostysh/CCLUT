@@ -1,0 +1,7 @@
+prefix:Sample
+CSC
+bx keystrip pattern LUT_code
+15	38	100	3749
+GEM
+bx	roll	pad	size	layer
+4	2	2	5	0
