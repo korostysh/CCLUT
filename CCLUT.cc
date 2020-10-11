@@ -30,7 +30,7 @@ bool EdgeCheck(int key, int hs)						// used to check if generated hit is within
 			return true;
 	}
 
-bool Convert_LUT_to_hits(int LUT_code, std::vector<int>& Hits_map){
+bool Convert_LUT_to_hits(int LUT_code, std::vector<int>& Hits_map){             //NORMAL
 for (int i = 0; i < CSCConstants::NUM_LAYERS; i++){
 	Hits_map.push_back(LUT_code%4);
 	LUT_code /= 4;
@@ -38,6 +38,20 @@ for (int i = 0; i < CSCConstants::NUM_LAYERS; i++){
 
   return false;
 }
+
+
+/*
+bool Convert_LUT_to_hits(int LUT_code, std::vector<int>& Hits_map){  //REVERSE
+for (int i = 0; i < CSCConstants::NUM_LAYERS  ; i++){
+	Hits_map.push_back(LUT_code%4);
+	LUT_code /= 4;
+}
+ std::reverse(Hits_map.begin(), Hits_map.end());
+
+
+  return false;
+}
+*/
 
 
 bool Hits_Generator(int Bx, int Key, int Pat, int LUT_code, std::vector<Hit>& hits)	// used to Fill Hits vector in CCLUT constructor
@@ -64,6 +78,7 @@ bool Hits_Generator(int Bx, int Key, int Pat, int LUT_code, std::vector<Hit>& hi
 		std::srand(std::time(0));
 
 		int n = 0;
+		int pat_offset = 10 - Pat/10;
 		while (n != Nhits)
 		{
 			int layer = std::abs(std::rand()) % CSCConstants::NUM_LAYERS;				// randomly select a layer
@@ -71,7 +86,8 @@ bool Hits_Generator(int Bx, int Key, int Pat, int LUT_code, std::vector<Hit>& hi
 			else usedlayers.at(layer) = true;
 
       if(Hits_map[layer] > 0){
-			int hs = Key + CSCConstants::CCLUT_offset[Pat][layer] + 2 - Hits_map[layer];//  halfsrip by layer
+			int hs = Key + CSCConstants::CCLUT_offset[pat_offset][layer] + 2 - Hits_map[layer];//  halfsrip by layer
+			std::cout << "CSCConstants::CCLUT_offset[pat_offset][layer]=" <<CSCConstants::CCLUT_offset[pat_offset][layer]<< " Hits_map[layer] " << Hits_map[layer] <<" Key " <<  Key << '\n';
 			if (EdgeCheck(Key, hs))	hits.push_back(Hit(Bx, hs, layer));
 			n++;
 		 }
